@@ -1,22 +1,26 @@
-import "./App.css";
+//import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import MyBooking from "./pages/MyBooking";
+import Layout from "./components/Layout";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Layout>
+        <Routes>
+          {/* Define routes*/}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/mybooking" element={<MyBooking />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 }
 
