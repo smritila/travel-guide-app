@@ -6,13 +6,12 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import MyBooking from "./pages/MyBooking";
-import Navbar from "./components/Navbar";
+import Layout from "./components/Layout";
 
 function App() {
   return (
     <Router>
-      <Navbar />
-      <div>
+      <Layout>
         <Routes>
           {/* Define routes*/}
           <Route path="/" element={<Home />} />
@@ -20,7 +19,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/mybooking" element={<MyBooking />} />
         </Routes>
-      </div>
+      </Layout>
     </Router>
   );
 }
