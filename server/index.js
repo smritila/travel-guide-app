@@ -1,9 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors"); //cross-origin-resource-sharing
-// import routes
 
 const connect = () => {
   try {
@@ -13,13 +13,17 @@ const connect = () => {
     console.log(err.message);
   }
 };
+
 app.use(cors());
 // used to parse json requests
 app.use(bodyParser.json());
+
 app.get("/", (req, res) => {
   res.send("server is working..");
 });
-// call user routes
+
+// import routes
+app.use("/api/auth", require("./routes/authRoutes"));
 
 const PORT = 8000;
 app.listen(PORT, () => {
