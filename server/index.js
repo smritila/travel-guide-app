@@ -24,6 +24,8 @@ app.get("/", (req, res) => {
 
 // import routes
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/packages", require("./routes/packageRoutes"));
+app.use("/api/import-data", require("./routes/importRoutes"));
 
 const PORT = 8000;
 app.listen(PORT, () => {
