@@ -22,11 +22,13 @@ function Navbar() {
               Home
             </Link>
           </li>
-          <li class="nav-item">
-            <Link to="/mybooking" className="nav-link">
-              Manage Bookings
+
+          <li className="nav-item">
+            <Link to="/package/:id" className="nav-link">
+              PackageDetailsPage
             </Link>
           </li>
+
           <li class="nav-item">
             <Link to="/login" className="nav-link">
               Login
@@ -35,6 +37,18 @@ function Navbar() {
           <li class="nav-item">
             <Link to="/register" className="nav-link">
               Register
+            </Link>
+          </li>
+
+          <li className="nav-item">
+            <Link to="/finalise-booking" className="nav-link">
+              FinaliseBookingPage
+            </Link>
+          </li>
+
+          <li class="nav-item">
+            <Link to="/manage-bookings" className="nav-link">
+              ManageBookingPage
             </Link>
           </li>
         </ul>
