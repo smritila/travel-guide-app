@@ -4,7 +4,7 @@ import "./Register.css";
 
 function Register() {
   return (
-    <div className="d-flex align-items-center justify-content-center vh-100 bg-light">
+    <div className="d-flex align-items-center justify-content-center vh-100 bg-light byg-auth-container">
       <div className="container" style={{ maxWidth: "400px" }}>
         <div className="card shadow">
           <div className="card-body">
