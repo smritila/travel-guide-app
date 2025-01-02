@@ -1,0 +1,102 @@
+/* General Page Layout */
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: #fff;
+}
+
+.register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Wider Registration Form */
+.register-container {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  padding: 2rem;
+  width: 400px; /* Wider layout to fit all fields */
+  color: #333;
+}
+
+.register-title {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #4e4e4e;
+}
+
+/* Form Layout */
+.register-form {
+  display: flex;
+  flex-direction: column; /* Single-column layout for clarity */
+  gap: 15px; /* Add consistent spacing between fields */
+}
+
+/* Form Group Styling */
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  color: #4e4e4e;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form-input:focus {
+  border-color: #6a11cb;
+  outline: none;
+  box-shadow: 0 0 3px rgba(106, 17, 203, 0.5);
+}
+
+/* Submit Button */
+.register-button {
+  width: 100%;
+  padding: 0.8rem;
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.register-button:hover {
+  background: linear-gradient(45deg, #4e0fc3, #1a5ac7);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Messages */
+.message {
+  margin-top: 10px;
+  padding: 0.8rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.message.error {
+  background: #ffbaba;
+  color: #d8000c;
+}
+
+.message.success {
+  background: #d4edda;
+  color: #155724;
+}
