@@ -38,4 +38,51 @@ const GuideSchema = new mongoose.Schema({
 // Create a Mongoose model
 const Guide = mongoose.model("Guide", GuideSchema);
 
+//Create new guide review schema here
+/**
+ * 1. guide_id - ObjectId
+ * 2. rating - number
+ * 3. review - string
+ * 4. date - Date
+ * 5. booking_id - ObjectId
+ */
+
+const GuideReviewSchema = new mongoose.Schema({
+  guide_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Guide",
+    required: true,
+  },
+  rating: {
+    type: Number,
+    required: true,
+    min: 1, // Assuming rating scale is 1 to 5
+    max: 5,
+    validate: {
+      validator: function (v) {
+        return Number.isInteger(v); // Ensure the rating is an integer
+      },
+      message: "Rating must be an integer between 1 and 5.",
+    },
+  },
+  review: {
+    type: String,
+    required: true,
+    maxlength: 1000, // Optional: Limit the review length
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now, // Automatically set to current date
+  },
+  booking_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Booking",
+    required: true,
+  },
+});
+
+const GuideReview = mongoose.model("GuideReview", GuideReviewSchema);
+
 module.exports = Guide;
+module.exports = GuideReview;

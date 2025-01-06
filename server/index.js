@@ -7,7 +7,9 @@ const cors = require("cors"); //cross-origin-resource-sharing
 
 const connect = () => {
   try {
-    mongoose.connect("mongodb://127.0.0.1:27017/BookYourGuide");
+    const mongodbServerURL =
+      "mongodb+srv://smrtghoshal24:IbKbwQnchdCxJOTf@cluster-mum.xrjs0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-MUM";
+    mongoose.connect(`${mongodbServerURL}/BookYourGuide`);
     console.log("connected to database");
   } catch (err) {
     console.log(err.message);
@@ -25,6 +27,8 @@ app.get("/", (req, res) => {
 // import routes
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/packages", require("./routes/packageRoutes"));
+app.use("/api/booking", require("./routes/bookingRoutes.js"));
+
 app.use("/api/guides", require("./routes/guideRoutes.js"));
 app.use("/api/import-data", require("./routes/importRoutes"));
 
