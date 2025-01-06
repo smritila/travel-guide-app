@@ -67,17 +67,29 @@ const updateBooking = async (req, res) => {
 // Get my bookings
 const getMyBookings = async (req, res) => {
   try {
-    const { userId } = req.query;
+    const { userId, status } = req.query;
 
     // Validate required fields
     if (!userId) {
       return res.status(400).json({ message: "User ID is required." });
     }
 
-    // Find bookings for the given user
-    const bookings = await Booking.find({ tourist_id: userId }).populate(
-      "guide_id package_id"
-    );
+    // Build the query object
+    let query = { tourist_id: userId };
+
+    // Add status filter if provided
+    if (status) {
+      if (status === "COMPLETED") {
+        query.status = "COMPLETED";
+      } else if (status === "NOT_COMPLETED") {
+        query.status = { $ne: "COMPLETED" };
+      } else {
+        return res.status(400).json({ message: "Invalid status value." });
+      }
+    }
+
+    // Find bookings for the given user with the optional status filter
+    const bookings = await Booking.find(query).populate("guide_id package_id");
 
     // Respond with the user's bookings
     res.status(200).json(bookings);
