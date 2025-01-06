@@ -1,4 +1,4 @@
-const Guide = require("../models/GuideSchema");
+const { Guide, GuideReview } = require("../models/GuideSchema");
 //const GuideReview = require("../models/GuideReviewSchema");
 
 const getAllGuides = async (req, res) => {
@@ -7,7 +7,7 @@ const getAllGuides = async (req, res) => {
     const guides = await Guide.find()
       .populate({
         path: "user_id",
-        select: "name email", // Only include name and email from User schema
+        select: "name email" // Only include name and email from User schema
       })
       .exec();
 
@@ -19,7 +19,7 @@ const getAllGuides = async (req, res) => {
       bio: guide.bio,
       experience: guide.experience,
       languages: guide.languages,
-      phone: guide.contact.phone,
+      phone: guide.contact.phone
     }));
 
     res.json({ success: true, data: guideList });
@@ -37,7 +37,7 @@ const getAllReviewsForGuide = async (req, res) => {
     const reviews = await GuideReview.find({ guide_id: guideId })
       .populate({
         path: "booking_id",
-        select: "date user_id", // Optionally populate related Booking data
+        select: "date user_id" // Optionally populate related Booking data
       })
       .exec();
 
@@ -64,7 +64,7 @@ const createReview = async (req, res) => {
       guide_id,
       rating,
       review,
-      booking_id,
+      booking_id
     });
 
     await newReview.save();
@@ -75,6 +75,7 @@ const createReview = async (req, res) => {
   }
 };
 
+/*
 const updateReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
@@ -119,12 +120,10 @@ const deleteReview = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+*/
 
 module.exports = {
+  getAllGuides,
   getAllReviewsForGuide,
-  createReview,
-  updateReview,
-  deleteReview,
+  createReview
 };
-
-module.exports = { getAllGuides };
