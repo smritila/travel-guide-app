@@ -1,72 +1,80 @@
 import React, { useState } from "react";
-import axiosInstance from "../axiosConfig";
+import "./Login.css";
+import axiosInstance from "../axiosConfig"; // Import the configured Axios instance
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [email, setEmail] = useState(""); // State for email
+  const [password, setPassword] = useState(""); // State for password
+  const [error, setError] = useState(null); // State for error messages
+  const [success, setSuccess] = useState(false); // State for success status
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(false);
+    e.preventDefault(); // Prevent default form submission
+    setError(null); // Clear previous errors
+    setSuccess(false); // Clear success status
+
     try {
+      // Make API call using the configured axios instance
       const response = await axiosInstance.post("/auth/login", {
         email,
         password,
       });
-      console.log("Login Successful:", response.data);
-      setSuccess(true);
+
+      // Handle successful response
+      console.log("Login successful:", response.data);
+      setSuccess(true); // Set success state
     } catch (err) {
-      console.error("Login Failed:", err);
-      setError(err.response.data.message);
+      // Handle error response
+      console.error("Login failed:", err.response?.data || err.message);
+      setError(err.response?.data?.message || "Something went wrong!");
     }
   };
-  return (
-    <div style={{ maxWidth: "400px", margin: "0 auto", textAlign: "center" }}>
-      <h1>Login Page</h1>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "15px" }}>
-          <label>Email:</label>
-          <br />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            required
-            style={{ padding: "10px", width: "100%" }}
-          />
-        </div>
-        <div style={{ marginBottom: "15px" }}>
-          <label>Password:</label>
-          <br />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            required
-            style={{ padding: "10px", width: "100%" }}
-          />
-        </div>
-        <button
-          type="submit"
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#007bff",
-            color: "#fff",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          Login
-        </button>
-      </form>
 
-      {/* Display messages based on API response */}
-      {success && <p style={{ color: "green" }}>Login successful!</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+  return (
+    <div className="d-flex align-items-center justify-content-center vh-100 bg-light byg-auth-container">
+      <div className="container" style={{ maxWidth: "400px" }}>
+        <div className="card shadow-lg p-4">
+          <h2 className="text-center mb-4">Login</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                id="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="btn btn-primary w-100">
+              Login
+            </button>
+          </form>
+          {/* Display success or error messages */}
+          {success && (
+            <p className="text-success text-center mt-3">Login successful!</p>
+          )}
+          {error && <p className="text-danger text-center mt-3">{error}</p>}
+        </div>
+      </div>
     </div>
   );
 }

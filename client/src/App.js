@@ -1,4 +1,4 @@
-//import "./App.css";
+import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -15,7 +15,7 @@ function App() {
     <Router>
       <Layout>
         <Routes>
-          {/* Define routes*/}
+          {/* Define routes */}
           <Route path="/" element={<Home />} />
           <Route path="/package/:id" element={<PackageDetailsPage />} />
           <Route path="/login" element={<Login />} />
