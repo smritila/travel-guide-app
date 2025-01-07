@@ -1,4 +1,5 @@
 body {
+<<<<<<< HEAD
   margin: 0;
   font-family: "Arial", sans-serif;
   background: linear-gradient(to right, #6a11cb, #2575fc);
@@ -86,3 +87,35 @@ body {
 .login-button:hover {
   background: #1a5ac7;
 }
+=======
+    background-color: #f8f9fa;
+  }
+  
+  .login-container {
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  .card {
+    border-radius: 15px;
+    background: #ffffff;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  
+  .form-control {
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+>>>>>>> a82652cf3d5e8ce5af57fbe95129d7a7a8879693

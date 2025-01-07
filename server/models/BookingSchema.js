@@ -11,13 +11,19 @@ const BookingSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  attraction_id: {
+  package_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Attraction",
+    ref: "Package",
     required: true,
   },
   date: { type: Date, required: true },
   time: { type: String, required: true },
+  status: {
+    type: String,
+    enum: ["NOT_COMPLETED", "COMPLETED"],
+    required: true,
+  },
 });
+const Booking = mongoose.model("Booking", BookingSchema);
 
-module.exports = BookingSchema;
+module.exports = Booking;

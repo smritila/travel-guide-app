@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* General Footer Styling */
 .footer {
   background-color: #343a40;
@@ -76,14 +77,69 @@
   color: #007bff;
 }
 
+=======
+
+.footer {
+  background-color: #333;
+  color: white;
+  padding: 20px 0;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between; /* Distribute space between sections */
+  padding: 0 20px;
+}
+
+.footer-section {
+  flex: 1; /* This makes each section take equal space */
+  padding: 0 10px;
+}
+
+.footer-section h3 {
+  margin-bottom: 10px;
+}
+
+.footer-section a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer-section a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.footer-section p {
+  display: flex;
+  align-items: center;
+}
+
+.footer-section svg {
+  margin-right: 10px; /* Space between icon and text */
+}
+
+>>>>>>> a82652cf3d5e8ce5af57fbe95129d7a7a8879693
 /* Responsive Design */
 @media (max-width: 768px) {
   .footer-content {
     flex-direction: column;
+<<<<<<< HEAD
     text-align: center;
   }
 
   .footer-section {
     margin: 20px 0;
+=======
+    align-items: center;
+  }
+
+  .footer-section {
+    margin-bottom: 20px;
+>>>>>>> a82652cf3d5e8ce5af57fbe95129d7a7a8879693
   }
 }
