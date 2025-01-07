@@ -24,9 +24,7 @@ function Login() {
       console.log("Login successful:", response.data);
       setSuccess(true); // Set success state
     } catch (err) {
-      // Handle error response
-      console.error("Login failed:", err.response?.data || err.message);
-      setError(err.response?.data?.message || "Something went wrong!");
+      setError(err.message); // Set error state
     }
   };
 
