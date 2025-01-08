@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./MyBooking.css";
 
-const MyBooking = () => {
+const FinaliseBookingPage = () => {
   const [bookings, setBookings] = useState([
     { id: 1, name: "John Doe", guide: "Historical Tour", date: "2025-01-10" },
     { id: 2, name: "Smrithika", guide: "Nature Walk", date: "2025-01-15" },
@@ -112,4 +112,4 @@ const MyBooking = () => {
   );
 };
 
-export default MyBooking;
+export default FinaliseBookingPage;

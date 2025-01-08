@@ -39,6 +39,18 @@ function Navbar() {
               Manage Bookings
             </Link>
           </li>
+
+          <li className="nav-item">
+            <Link to="/finalise-booking" className="nav-link">
+              FinaliseBookingPage
+            </Link>
+          </li>
+
+          <li class="nav-item">
+            <Link to="/manage-bookings" className="nav-link">
+              ManageBookingPage
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>
