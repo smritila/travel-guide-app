@@ -20,11 +20,21 @@ function Login() {
         password,
       });
 
-      // Handle successful response
-      console.log("Login successful:", response.data);
-      setSuccess(true); // Set success state
+      // Since the interceptor returns response.data, check for token directly
+      if (response.token) {
+        console.log("Login successful:", response);
+
+        // Store the token in sessionStorage
+        sessionStorage.setItem("authToken", response.token);
+
+        setSuccess(true); // Set success state
+      } else {
+        console.error("Token not found in response:", response);
+        throw new Error("Server did not return a valid token.");
+      }
     } catch (err) {
-      setError(err.message); // Set error state
+      console.error("Error during login:", err); // Debugging: Log error details
+      setError(err.message || "Login failed. Please try again.");
     }
   };
 
