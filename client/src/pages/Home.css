@@ -1,0 +1,135 @@
+/* Home.css */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
+  
+  .home {
+    text-align: center;
+    color: #333;
+  }
+  
+  /* Navigation Bar */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color:darkmagenta;
+    padding: 10px 20px;
+    color: white;
+  }
+  
+  .navbar .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .nav-links {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-links li {
+    margin: 0 10px;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: white;
+    transition: color 0.3s;
+  }
+  
+  .nav-links a:hover {
+    color: #FFDD57;
+  }
+  
+  .btn-primary {
+    background-color: #FFDD57;
+    color: #333;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  /* Hero Section */
+  .hero {
+    /* background: url('/images/Explore.jpg');  */
+   color:red;
+   height: 70vh;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   text-align: center;
+ }
+ 
+ .hero-content h1 {
+   font-size: 3rem;
+   margin: 0;
+ }
+ 
+ .hero-content p {
+   font-size: 1.2rem;
+   margin: 15px 0;
+ }
+ 
+ .btn-secondary {
+   background-color: #007BFF;
+   color: white;
+   border: none;
+   padding: 10px 20px;
+   border-radius: 5px;
+   cursor: pointer;
+   font-weight: bold;
+   transition: background-color 0.3s;
+ }
+ 
+ .btn-secondary:hover {
+   background-color: #0056b3;
+ }
+ 
+ /* Featured Destinations */
+ .destinations {
+   padding: 50px 20px;
+   background-color: #f4f4f4;
+ }
+ 
+ .destinations h2 {
+   margin-bottom: 30px;
+ }
+ 
+ .destination-grid {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+   gap: 50px;
+ }
+ 
+ .destination {
+   background:lightgray;
+   border-radius: 30px;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+   overflow: hidden;
+   text-align: center;
+ }
+ 
+ .destination img {
+   width: 100%;
+   height: 200px;
+   object-fit: cover;
+ }
+ 
+ .destination h3 {
+   margin: 15px 0 10px;
+ }
+ 
+ .destination p {
+   padding: 0 10px 20px;
+ }
+ 
+ 
+ 
