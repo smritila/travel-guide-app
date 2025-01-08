@@ -18,7 +18,7 @@
   padding: 10px; /* Increase padding for better usability */
   font-size: 1rem; /* Standard font size */
   border: 1px solid #ced4da; /* Light gray border */
-  background-color: #fff; /* White background */
+  /* background-color: #fff;  */
 }
 
 .form-control:focus {
