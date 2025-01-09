@@ -1,19 +1,22 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./Register.css";
-
 function Register() {
   return (
-    <div className="d-flex align-items-center justify-content-center vh-100 bg-light byg-auth-container">
-      <div className="container" style={{ maxWidth: "400px" }}>
-        <div className="card shadow">
-          <div className="card-body">
-            <h3 className="text-center mb-4">Register</h3>
-            <form>
-              <div className="mb-3">
-                <label htmlFor="name" className="form-label">
-                  Name
-                </label>
+    <div className="d-flex align-items-center justify-content-center">
+      <div className="container">
+        <div className="card-header text-black text-center">
+          <h3 className="mb-4">Registration Page</h3>
+        </div>
+        <div className="card-body">
+          <form>
+            <div className="mb-3">
+              <label htmlFor="name" className="form-label">
+                Name
+              </label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="bi bi-person"></i>
+                </span>
                 <input
                   type="text"
                   id="name"
@@ -22,10 +25,15 @@ function Register() {
                   required
                 />
               </div>
-              <div className="mb-3">
-                <label htmlFor="email" className="form-label">
-                  Email
-                </label>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="bi bi-envelope"></i>
+                </span>
                 <input
                   type="email"
                   id="email"
@@ -34,10 +42,15 @@ function Register() {
                   required
                 />
               </div>
-              <div className="mb-3">
-                <label htmlFor="password" className="form-label">
-                  Password
-                </label>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="bi bi-lock"></i>
+                </span>
                 <input
                   type="password"
                   id="password"
@@ -46,10 +59,15 @@ function Register() {
                   required
                 />
               </div>
-              <div className="mb-3">
-                <label htmlFor="confirmPassword" className="form-label">
-                  Confirm Password
-                </label>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="confirmPassword" className="form-label">
+                Confirm Password
+              </label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="bi bi-lock"></i>
+                </span>
                 <input
                   type="password"
                   id="confirmPassword"
@@ -58,22 +76,27 @@ function Register() {
                   required
                 />
               </div>
-              <div className="mb-3">
-                <label htmlFor="role" className="form-label">
-                  Role
-                </label>
-                <select id="role" className="form-select" required>
-                  <option value="">Select your role</option>
-                  <option value="admin">Admin</option>
-                  <option value="user">User</option>
-                  <option value="guest">Guest</option>
-                </select>
-              </div>
-              <button type="submit" className="btn btn-primary w-100">
-                Register
-              </button>
-            </form>
-          </div>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="role" className="form-label">
+                Role
+              </label>
+              <select id="role" className="form-select" required>
+                <option value="">Select your role</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+                <option value="guest">Guest</option>
+              </select>
+            </div>
+            <button type="submit" className="btn btn-primary w-100">
+              Register
+            </button>
+          </form>
+        </div>
+        <div className="card-footer text-center">
+          <small className="text-muted">
+            Already have an account? <a href="/login">Login here</a>
+          </small>
         </div>
       </div>
     </div>
