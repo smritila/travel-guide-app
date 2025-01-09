@@ -1,143 +1,150 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import axiosInstance from "../axiosConfig";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function PackageDetailsPage() {
   const { id } = useParams();
   const [packageDetails, setPackageDetails] = useState(null);
-  const [availability, setAvailability] = useState({});
-  const [form, setForm] = useState({
-    adults: 1,
-    date: "",
-    timeSlot: "7AM-9AM",
-    language: "English",
-  });
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/packages/${id}`)
-      .then((res) => res.json())
-      .then((data) => setPackageDetails(data))
-      .catch((err) => console.error(err));
+    const fetchPackageDetails = async () => {
+      try {
+        console.log("Fetching package details for ID:", id);
+        const response = await axiosInstance.get(`/packages/${id}`);
+        console.log("Fetched Package Details:", response);
+
+        // Ensure that the expected fields exist in the response
+        if (
+          response &&
+          response.title &&
+          response.images &&
+          response.description &&
+          response.highlights &&
+          response.includes
+        ) {
+          setPackageDetails(response);
+        } else {
+          throw new Error("Invalid data format received from API.");
+        }
+      } catch (err) {
+        console.error("Error fetching package details:", err);
+        setError(
+          err.message || "Something went wrong! Please try again later."
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPackageDetails();
   }, [id]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
+  if (isLoading) {
+    return <div className="text-center my-5">Loading...</div>;
+  }
 
-  const handleCheckAvailability = async (e) => {
-    e.preventDefault();
-    // Fetch availability from the API
-    const response = await fetch(
-      `http://localhost:5000/api/check-availability`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, packageId: id }),
-      }
+  if (error) {
+    return <div className="alert alert-danger text-center">{error}</div>;
+  }
+
+  if (!packageDetails) {
+    return (
+      <div className="text-center my-5">No package details available.</div>
     );
-    const data = await response.json();
-    setAvailability(data);
-  };
-
-  if (!packageDetails) return <p>Loading...</p>;
+  }
 
   return (
-    <div>
-      <h1>{packageDetails.title}</h1>
-      <div>
-        {packageDetails.images.map((img, index) => (
-          <img
-            key={index}
-            src={img}
-            alt={packageDetails.title}
-            style={{ width: "100%", height: "auto" }}
-          />
-        ))}
-      </div>
-      <p>{packageDetails.description}</p>
-      <p>Price: ${packageDetails.price}</p>
-      <button
-        onClick={() =>
-          document
-            .getElementById("availability-section")
-            .scrollIntoView({ behavior: "smooth" })
-        }
-      >
-        Check Availability
-      </button>
-
-      <div id="availability-section">
-        <h2>Check Availability</h2>
-        <form onSubmit={handleCheckAvailability}>
-          <label>
-            Number of Adults:
-            <input
-              type="number"
-              name="adults"
-              value={form.adults}
-              min="1"
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label>
-            Date:
-            <input
-              type="date"
-              name="date"
-              value={form.date}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label>
-            Time Slot:
-            <select
-              name="timeSlot"
-              value={form.timeSlot}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="7AM-9AM">7AM - 9AM</option>
-              <option value="9AM-11AM">9AM - 11AM</option>
-            </select>
-          </label>
-          <label>
-            Preferred Language:
-            <select
-              name="language"
-              value={form.language}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="English">English</option>
-              <option value="Spanish">Spanish</option>
-            </select>
-          </label>
-          <button type="submit">Check Availability</button>
-        </form>
-
-        {availability.guides && (
-          <div>
-            <h3>Available Guides</h3>
-            <ul>
-              {availability.guides.map((guide) => (
-                <li key={guide.id}>
+    <div className="container py-5">
+      <h1 className="text-center mb-4">{packageDetails.title}</h1>
+      <div className="row">
+        {/* Carousel for Images */}
+        <div className="col-md-8">
+          <div
+            id="packageCarousel"
+            className="carousel slide"
+            data-bs-ride="carousel"
+          >
+            <div className="carousel-inner">
+              {packageDetails.images.map((img, index) => (
+                <div
+                  key={index}
+                  className={`carousel-item ${index === 0 ? "active" : ""}`}
+                >
                   <img
-                    src={guide.profilePicture}
-                    alt={guide.name}
-                    style={{ width: 50, height: 50 }}
+                    src={img}
+                    className="d-block w-100"
+                    alt={`Slide ${index + 1}`}
+                    style={{ maxHeight: "500px", objectFit: "cover" }}
                   />
-                  <p>Name: {guide.name}</p>
-                  <p>Rating: {guide.rating}</p>
-                  <button onClick={() => alert(`Booked with ${guide.name}`)}>
-                    Book Now
-                  </button>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
+            <button
+              className="carousel-control-prev"
+              type="button"
+              data-bs-target="#packageCarousel"
+              data-bs-slide="prev"
+            >
+              <span
+                className="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span className="visually-hidden">Previous</span>
+            </button>
+            <button
+              className="carousel-control-next"
+              type="button"
+              data-bs-target="#packageCarousel"
+              data-bs-slide="next"
+            >
+              <span
+                className="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span className="visually-hidden">Next</span>
+            </button>
           </div>
-        )}
+        </div>
+
+        {/* Package Details */}
+        <div className="col-md-4">
+          <h3>Package Details</h3>
+          <p>
+            <strong>State:</strong> {packageDetails.state_name}
+          </p>
+          <p>
+            <strong>Place:</strong> {packageDetails.place_name}
+          </p>
+          <p>{packageDetails.description}</p>
+          <h4 className="text-success">Price: ₹{packageDetails.price}</h4>
+        </div>
+      </div>
+
+      {/* Highlights Section */}
+      <div className="mt-5">
+        <h3>Highlights</h3>
+        <ul className="list-group">
+          {packageDetails.highlights.map((highlight, index) => (
+            <li key={index} className="list-group-item">
+              {highlight}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Includes Section */}
+      <div className="mt-5">
+        <h3>What's Included</h3>
+        <ul className="list-group">
+          {packageDetails.includes.map((item, index) => (
+            <li key={index} className="list-group-item">
+              {item}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
