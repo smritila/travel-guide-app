@@ -14,9 +14,6 @@ function Register() {
                 Name
               </label>
               <div className="input-group">
-                <span className="input-group-text">
-                  <i className="bi bi-person"></i>
-                </span>
                 <input
                   type="text"
                   id="name"
@@ -31,9 +28,6 @@ function Register() {
                 Email
               </label>
               <div className="input-group">
-                <span className="input-group-text">
-                  <i className="bi bi-envelope"></i>
-                </span>
                 <input
                   type="email"
                   id="email"
@@ -48,9 +42,6 @@ function Register() {
                 Password
               </label>
               <div className="input-group">
-                <span className="input-group-text">
-                  <i className="bi bi-lock"></i>
-                </span>
                 <input
                   type="password"
                   id="password"
@@ -65,9 +56,6 @@ function Register() {
                 Confirm Password
               </label>
               <div className="input-group">
-                <span className="input-group-text">
-                  <i className="bi bi-lock"></i>
-                </span>
                 <input
                   type="password"
                   id="confirmPassword"
