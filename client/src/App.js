@@ -1,5 +1,7 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
@@ -17,7 +19,7 @@ function App() {
         <Routes>
           {/* Define routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/package/:id" element={<PackageDetailsPage />} />
+          <Route path="/packages/:id" element={<PackageDetailsPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/finalise-booking" element={<FinaliseBookingPage />} />

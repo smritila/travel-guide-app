@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
   },
 });
 
-// Response interceptor
+//Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
     // Process the response before passing it to the application
