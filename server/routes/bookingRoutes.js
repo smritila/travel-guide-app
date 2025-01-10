@@ -1,15 +1,18 @@
 const express = require("express");
+const router = express.Router();
+
 const {
   createNewBooking,
   updateBooking,
-  getMyBookings,
+  getMyBookings
 } = require("../controllers/bookingController");
-const router = express.Router();
+const authMiddleware = require("../middlewares/authMiddleware");
+const validateUserId = require("../middlewares/validateUserId");
 
-router.post("/", createNewBooking);
+router.post("/", authMiddleware, createNewBooking);
 // Route to update a booking
-router.put("/:bookingId", updateBooking);
+router.put("/:bookingId", authMiddleware, updateBooking);
 // Route to get bookings for a specific user
-router.get("/", getMyBookings);
+router.get("/", authMiddleware, validateUserId, getMyBookings);
 
 module.exports = router;
