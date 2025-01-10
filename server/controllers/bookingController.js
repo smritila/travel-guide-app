@@ -2,7 +2,14 @@ const Booking = require("../models/BookingSchema");
 
 const createNewBooking = async (req, res) => {
   try {
-    const { guide_id, tourist_id, package_id, date, time, status } = req.body;
+    const {
+      guide_id,
+      tourist_id = req.user?.id,
+      package_id,
+      date,
+      time,
+      status
+    } = req.body;
 
     // Validate required fields
     if (!guide_id || !tourist_id || !package_id || !date || !time || !status) {
@@ -16,7 +23,7 @@ const createNewBooking = async (req, res) => {
       package_id,
       date,
       time,
-      status,
+      status
     });
 
     // Save the booking to the database
@@ -46,7 +53,7 @@ const updateBooking = async (req, res) => {
     // Find the booking and update it
     const updatedBooking = await Booking.findByIdAndUpdate(bookingId, updates, {
       new: true,
-      runValidators: true,
+      runValidators: true
     });
 
     // Check if the booking exists
