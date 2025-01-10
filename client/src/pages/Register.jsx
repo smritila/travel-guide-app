@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 function Register() {
   return (
-    <div className="d-flex align-items-center justify-content-center vh-100 bg-light byg-auth-container">
+    <div className="d-flex align-items-center justify-content-center bg-light byg-auth-container">
       <div className="container">
         <div className="card shadow-lg p-4">
           <h2 className="text-center mb-4">Create An Account</h2>
@@ -72,9 +72,8 @@ function Register() {
                 </label>
                 <select id="role" className="form-select" required>
                   <option value="">Select your role</option>
-                  <option value="admin">Admin</option>
                   <option value="user">User</option>
-                  <option value="guest">Guest</option>
+                  <option value="guide">Guide</option>
                 </select>
               </div>
               <button type="submit" className="btn btn-primary w-100">

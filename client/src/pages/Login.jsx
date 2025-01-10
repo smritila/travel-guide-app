@@ -39,7 +39,7 @@ function Login() {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center vh-100 bg-light byg-auth-container">
+    <div className="d-flex align-items-center justify-content-center  bg-light byg-auth-container">
       <div className="container" style={{ maxWidth: "400px" }}>
         <div className="card shadow-lg p-4">
           <h2 className="text-center mb-4">Login</h2>
