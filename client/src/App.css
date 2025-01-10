@@ -27,9 +27,6 @@
 .App-link {
   color: #61dafb;
 }
-body {
-  background-color: #f8f9fa; /* Light gray background */
-}
 
 .card {
   border-radius: 10px;
@@ -43,7 +40,6 @@ body {
 .btn-primary:hover {
   background-color: #0056b3; /* Darker blue on hover */
 }
-
 
 @keyframes App-logo-spin {
   from {
