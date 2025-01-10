@@ -6,6 +6,7 @@ const {
   updateBooking,
   getMyBookings
 } = require("../controllers/bookingController");
+
 const authMiddleware = require("../middlewares/authMiddleware");
 const validateUserId = require("../middlewares/validateUserId");
 
