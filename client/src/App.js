@@ -15,7 +15,7 @@ import PublicRoute from "./components/PublicRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import AuthProvider from "./hooks/AuthProvider";
-
+ 
 function App() {
   return (
     <AuthProvider>
