@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axiosInstance from "../axiosConfig";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Carousel } from "react-bootstrap";
 
 function PackageDetailsPage() {
   const { id } = useParams();
@@ -62,51 +62,18 @@ function PackageDetailsPage() {
       <div className="row">
         {/* Carousel for Images */}
         <div className="col-md-8">
-          <div
-            id="packageCarousel"
-            className="carousel slide"
-            data-bs-ride="carousel"
-          >
-            <div className="carousel-inner">
-              {packageDetails.images.map((img, index) => (
-                <div
-                  key={index}
-                  className={`carousel-item ${index === 0 ? "active" : ""}`}
-                >
-                  <img
-                    src={img}
-                    className="d-block w-100"
-                    alt={`Slide ${index + 1}`}
-                    style={{ maxHeight: "500px", objectFit: "cover" }}
-                  />
-                </div>
-              ))}
-            </div>
-            <button
-              className="carousel-control-prev"
-              type="button"
-              data-bs-target="#packageCarousel"
-              data-bs-slide="prev"
-            >
-              <span
-                className="carousel-control-prev-icon"
-                aria-hidden="true"
-              ></span>
-              <span className="visually-hidden">Previous</span>
-            </button>
-            <button
-              className="carousel-control-next"
-              type="button"
-              data-bs-target="#packageCarousel"
-              data-bs-slide="next"
-            >
-              <span
-                className="carousel-control-next-icon"
-                aria-hidden="true"
-              ></span>
-              <span className="visually-hidden">Next</span>
-            </button>
-          </div>
+          <Carousel>
+            {packageDetails.images.map((img, index) => (
+              <Carousel.Item key={index}>
+                <img
+                  src={img}
+                  className="d-block w-100"
+                  alt={`Slide ${index + 1}`}
+                  style={{ height: "300px", objectFit: "cover" }}
+                />
+              </Carousel.Item>
+            ))}
+          </Carousel>
         </div>
 
         {/* Package Details */}
