@@ -1,115 +1,116 @@
-import React, { useState } from "react";
-import "./MyBooking.css";
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Button, Card, Table } from "react-bootstrap";
+function FinaliseBookingPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-const FinaliseBookingPage = () => {
-  const [bookings, setBookings] = useState([
-    { id: 1, name: "John Doe", guide: "Historical Tour", date: "2025-01-10" },
-    { id: 2, name: "Smrithika", guide: "Nature Walk", date: "2025-01-15" },
-    {id: 3, name: "Sinchana", guide: "Beach peace", date: "2025-03-15"},
-    {id: 4, name: "Reena", guide: "Mountain hill", date: "2025-04-12"},
-  ]);
+  const { formData, packageDetails } = location.state || {};
 
-  const [newBooking, setNewBooking] = useState({ name: "", guide: "", date: "" });
-  const [editing, setEditing] = useState(false);
-  const [currentBooking, setCurrentBooking] = useState(null);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewBooking({ ...newBooking, [name]: value });
-  };
-
-  const addBooking = () => {
-    if (newBooking.name && newBooking.guide && newBooking.date) {
-      setBookings([
-        ...bookings,
-        { id: Date.now(), ...newBooking },
-      ]);
-      setNewBooking({ name: "", guide: "", date: "" });
-    }
-  };
-
-  const deleteBooking = (id) => {
-    setBookings(bookings.filter((booking) => booking.id !== id));
-  };
-
-  const editBooking = (booking) => {
-    setEditing(true);
-    setCurrentBooking(booking);
-    setNewBooking(booking);
-  };
-
-  const updateBooking = () => {
-    setBookings(
-      bookings.map((booking) =>
-        booking.id === currentBooking.id ? { ...currentBooking, ...newBooking } : booking
-      )
+  if (!formData || !packageDetails) {
+    return (
+      <div className="text-center my-5">
+        <div className="alert alert-danger">
+          Missing booking details. Please go back and try again.
+        </div>
+        <Button onClick={() => navigate(-1)}>Go Back</Button>
+      </div>
     );
-    setEditing(false);
-    setNewBooking({ name: "", guide: "", date: "" });
-    setCurrentBooking(null);
+  }
+
+  const handleConfirmBooking = () => {
+    // Replace this with the actual API call for confirming the booking
+    alert("Booking Confirmed!");
+    navigate("/");
   };
 
   return (
-    <div className="container">
-      <header>
-        <h1>Book-Your-Guide - Manage Bookings</h1>
-      </header>
+    <div className="container py-5">
+      <h1 className="text-center mb-4">Finalize Booking</h1>
+      <Card>
+        <Card.Header className="bg-primary text-white">
+          <h4>Package Details</h4>
+        </Card.Header>
+        <Card.Body>
+          <h5>{packageDetails.title}</h5>
+          <p>
+            <strong>Place:</strong> {packageDetails.place_name}
+          </p>
+          <p>
+            <strong>Price:</strong> ₹{packageDetails.price}
+          </p>
+        </Card.Body>
+      </Card>
 
-      <section className="form-section">
-        <h2>{editing ? "Edit Booking" : "Add Booking"}</h2>
-        <div className="form">
-          <input
-            type="text"
-            name="name"
-            placeholder="Customer Name"
-            value={newBooking.name}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="guide"
-            placeholder="Guide Name"
-            value={newBooking.guide}
-            onChange={handleInputChange}
-          />
-          <input
-            type="date"
-            name="date"
-            value={newBooking.date}
-            onChange={handleInputChange}
-          />
-          <button className="btn" onClick={editing ? updateBooking : addBooking}>
-            {editing ? "Update" : "Add Booking"}
-          </button>
-        </div>
-      </section>
+      <Card className="mt-4">
+        <Card.Header className="bg-secondary text-white">
+          <h4>Booking Details</h4>
+        </Card.Header>
+        <Card.Body>
+          <Table bordered>
+            <tbody>
+              <tr>
+                <th>Date</th>
+                <td>{formData.date}</td>
+              </tr>
+              <tr>
+                <th>Time</th>
+                <td>{formData.time}</td>
+              </tr>
+              <tr>
+                <th>Number of Persons</th>
+                <td>{formData.persons}</td>
+              </tr>
+              <tr>
+                <th>Guide</th>
+                <td>
+                  {formData.guide ? (
+                    <>
+                      <p>
+                        <strong>Name:</strong> {formData.guide.name}
+                      </p>
+                      <p>
+                        <strong>Email:</strong> {formData.guide.email}
+                      </p>
+                      <p>
+                        <strong>Experience:</strong> {formData.guide.experience}{" "}
+                        years
+                      </p>
+                      <p>
+                        <strong>Languages:</strong>{" "}
+                        {formData.guide.languages.join(", ")}
+                      </p>
+                    </>
+                  ) : (
+                    "No guide selected"
+                  )}
+                </td>
+              </tr>
+            </tbody>
+          </Table>
+        </Card.Body>
+      </Card>
 
-      <section className="list-section">
-        <h2>Bookings List</h2>
-        {bookings.length > 0 ? (
-          <ul className="booking-list">
-            {bookings.map((booking) => (
-              <li key={booking.id} className="booking-item">
-                <div className="booking-info">
-                  <strong>{booking.name}</strong> booked <em>{booking.guide}</em> on {booking.date}
-                </div>
-                <div className="booking-actions">
-                  <button className="btn edit-btn" onClick={() => editBooking(booking)}>
-                    Edit
-                  </button>
-                  <button className="btn delete-btn" onClick={() => deleteBooking(booking.id)}>
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No bookings available.</p>
-        )}
-      </section>
+      <div className="text-center mt-5">
+        <Button
+          variant="success"
+          size="lg"
+          onClick={handleConfirmBooking}
+          className="px-5"
+        >
+          Confirm Booking
+        </Button>
+        <Button
+          variant="outline-danger"
+          size="lg"
+          onClick={() => navigate(-1)}
+          className="px-5 ms-3"
+        >
+          Go Back
+        </Button>
+      </div>
     </div>
   );
-};
+}
 
 export default FinaliseBookingPage;
