@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosConfig";
-import { Carousel } from "react-bootstrap";
+import { Carousel, Button, Offcanvas, Form, Table } from "react-bootstrap";
 
 function PackageDetailsPage() {
   const { id } = useParams();
   const [packageDetails, setPackageDetails] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showDrawer, setShowDrawer] = useState(false);
+  const [formData, setFormData] = useState({
+    date: "",
+    time: "",
+    persons: 1,
+    guide: null,
+  });
+  const [guides, setGuides] = useState([]); // Guides list with names and reviews
 
+  const navigate = useNavigate();
+
+  // Fetch package details
   useEffect(() => {
     const fetchPackageDetails = async () => {
       try {
-        console.log("Fetching package details for ID:", id);
         const response = await axiosInstance.get(`/packages/${id}`);
-        console.log("Fetched Package Details:", response);
-
-        // Ensure that the expected fields exist in the response
         if (
           response &&
           response.title &&
@@ -30,7 +37,6 @@ function PackageDetailsPage() {
           throw new Error("Invalid data format received from API.");
         }
       } catch (err) {
-        console.error("Error fetching package details:", err);
         setError(
           err.message || "Something went wrong! Please try again later."
         );
@@ -39,8 +45,34 @@ function PackageDetailsPage() {
       }
     };
 
+    const fetchGuides = async () => {
+      try {
+        const response = await axiosInstance.get(`/guides`);
+        const guides = response.data;
+        setGuides(guides || []);
+      } catch (err) {
+        console.error("Error fetching guides:", err);
+      }
+    };
+
     fetchPackageDetails();
+    fetchGuides();
   }, [id]);
+
+  const handleShowDrawer = () => setShowDrawer(true);
+  const handleCloseDrawer = () => setShowDrawer(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleBookingConfirmation = () => {
+    navigate("/finalize-booking", { state: { formData, packageDetails } });
+  };
 
   if (isLoading) {
     return <div className="text-center my-5">Loading...</div>;
@@ -60,7 +92,6 @@ function PackageDetailsPage() {
     <div className="container py-5">
       <h1 className="text-center mb-4">{packageDetails.title}</h1>
       <div className="row">
-        {/* Carousel for Images */}
         <div className="col-md-8">
           <Carousel>
             {packageDetails.images.map((img, index) => (
@@ -75,8 +106,6 @@ function PackageDetailsPage() {
             ))}
           </Carousel>
         </div>
-
-        {/* Package Details */}
         <div className="col-md-4">
           <h3>Package Details</h3>
           <p>
@@ -87,10 +116,12 @@ function PackageDetailsPage() {
           </p>
           <p>{packageDetails.description}</p>
           <h4 className="text-success">Price: ₹{packageDetails.price}</h4>
+          <Button variant="primary" className="mt-3" onClick={handleShowDrawer}>
+            Book Now
+          </Button>
         </div>
       </div>
 
-      {/* Highlights Section */}
       <div className="mt-5">
         <h3>Highlights</h3>
         <ul className="list-group">
@@ -102,7 +133,6 @@ function PackageDetailsPage() {
         </ul>
       </div>
 
-      {/* Includes Section */}
       <div className="mt-5">
         <h3>What's Included</h3>
         <ul className="list-group">
@@ -113,6 +143,97 @@ function PackageDetailsPage() {
           ))}
         </ul>
       </div>
+
+      {/* Drawer for Booking */}
+      <Offcanvas
+        show={showDrawer}
+        onHide={handleCloseDrawer}
+        placement="end"
+        style={{ width: "650px" }}
+      >
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Book Your Package</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Date</Form.Label>
+              <Form.Control
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Time</Form.Label>
+              <Form.Control
+                type="time"
+                name="time"
+                value={formData.time}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Number of Persons</Form.Label>
+              <Form.Control
+                type="number"
+                name="persons"
+                min="1"
+                value={formData.persons}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <h5 className="mt-4">Choose a Guide</h5>
+            <Table striped bordered hover className="mt-3">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Experience (Years)</th>
+                  <th>Bio</th>
+                  <th>Languages</th>
+                  <th>Select</th>
+                </tr>
+              </thead>
+              <tbody>
+                {guides.map((guide, index) => (
+                  <tr key={index}>
+                    <td>{guide.name}</td>
+                    <td>{guide.email}</td>
+                    <td>{guide.phone}</td>
+                    <td>{guide.experience}</td>
+                    <td>{guide.bio}</td>
+                    <td>{guide.languages.join(", ")}</td>
+                    <td>
+                      <Form.Check
+                        type="radio"
+                        name="guide"
+                        value={guide.id}
+                        onChange={(e) =>
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            guide: guide,
+                          }))
+                        }
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+            <Button
+              variant="success"
+              className="mt-3 w-100"
+              onClick={handleBookingConfirmation}
+              disabled={!formData.guide}
+            >
+              Confirm Booking
+            </Button>
+          </Form>
+        </Offcanvas.Body>
+      </Offcanvas>
     </div>
   );
 }
