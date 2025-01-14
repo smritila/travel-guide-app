@@ -1,11 +1,14 @@
 import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../hooks/AuthProvider";
 
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useContext(AuthContext);
+  const location = useLocation();
 
-  return isAuthenticated ? <Navigate to="/manage-bookings" /> : children;
+  const from = location.state?.from?.pathname || "/manage-bookings"; // Default to /manage-bookings
+
+  return isAuthenticated ? <Navigate to={from} replace /> : children;
 };
 
 export default PublicRoute;

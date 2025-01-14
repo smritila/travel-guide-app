@@ -1,28 +1,74 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Button, Card, Table } from "react-bootstrap";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, Card, Table, Spinner, Alert } from "react-bootstrap";
+
+import axiosInstance from "../axiosConfig";
+
 function FinaliseBookingPage() {
-  const location = useLocation();
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const { formData, packageDetails } = location.state || {};
+  // Retrieve bookingData from sessionStorage
+  const bookingData = JSON.parse(sessionStorage.getItem("bookingData"));
 
-  if (!formData || !packageDetails) {
+  if (!bookingData || !bookingData.formData || !bookingData.packageDetails) {
     return (
       <div className="text-center my-5">
         <div className="alert alert-danger">
           Missing booking details. Please go back and try again.
         </div>
-        <Button onClick={() => navigate(-1)}>Go Back</Button>
+        <Button onClick={() => navigate("/")}>Go Back</Button>
       </div>
     );
   }
 
-  const handleConfirmBooking = () => {
-    // Replace this with the actual API call for confirming the booking
-    alert("Booking Confirmed!");
-    navigate("/");
+  const { formData, packageDetails } = bookingData;
+
+  const handleConfirmBooking = async () => {
+    setLoading(true);
+    try {
+      const payload = {
+        guide_id: formData.guide?.id,
+        package_id: packageDetails._id,
+        date: formData.date,
+        time: formData.time,
+        status: "NOT_COMPLETED"
+      };
+
+      await axiosInstance.post("/booking", payload);
+      setSuccess(true);
+    } catch (err) {
+      console.error("Error confirming booking:", err);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (success) {
+    return (
+      <div className="container py-5">
+        <Alert variant="success" className="text-center">
+          <h4 className="mb-4">🎉 Booking Confirmed! 🎉</h4>
+          <p>
+            Thank you for choosing us! Your tour booking has been successfully
+            confirmed.
+          </p>
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={() => {
+              sessionStorage.removeItem("bookingData"); // Clear bookingData after confirmation
+              navigate("/manage-bookings");
+            }}
+            className="mt-3"
+          >
+            Go to Manage Bookings
+          </Button>
+        </Alert>
+      </div>
+    );
+  }
 
   return (
     <div className="container py-5">
@@ -37,7 +83,12 @@ function FinaliseBookingPage() {
             <strong>Place:</strong> {packageDetails.place_name}
           </p>
           <p>
-            <strong>Price:</strong> ₹{packageDetails.price}
+            <strong>Price Breakdown:</strong> Adult {formData.persons} X ₹
+            {packageDetails.price}
+          </p>
+          <p>
+            <strong>Total Price:</strong> ₹
+            {packageDetails.price * formData.persons}
           </p>
         </Card.Body>
       </Card>
@@ -97,14 +148,26 @@ function FinaliseBookingPage() {
           size="lg"
           onClick={handleConfirmBooking}
           className="px-5"
+          disabled={loading}
         >
-          Confirm Booking
+          {loading && (
+            <Spinner
+              as="span"
+              animation="border"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+              className="me-2"
+            />
+          )}
+          <span>Confirm Booking</span>
         </Button>
         <Button
           variant="outline-danger"
           size="lg"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(`/packages/${packageDetails._id}`)} // Go back to package details page
           className="px-5 ms-3"
+          disabled={loading}
         >
           Go Back
         </Button>
