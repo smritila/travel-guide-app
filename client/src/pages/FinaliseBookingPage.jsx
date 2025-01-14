@@ -1,27 +1,30 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, Card, Table } from "react-bootstrap";
+
 function FinaliseBookingPage() {
-  const location = useLocation();
   const navigate = useNavigate();
 
-  const { formData, packageDetails } = location.state || {};
+  // Retrieve bookingData from sessionStorage
+  const bookingData = JSON.parse(sessionStorage.getItem("bookingData"));
 
-  if (!formData || !packageDetails) {
+  if (!bookingData || !bookingData.formData || !bookingData.packageDetails) {
     return (
       <div className="text-center my-5">
         <div className="alert alert-danger">
           Missing booking details. Please go back and try again.
         </div>
-        <Button onClick={() => navigate(-1)}>Go Back</Button>
+        <Button onClick={() => navigate("/")}>Go Back</Button>
       </div>
     );
   }
 
+  const { formData, packageDetails } = bookingData;
+
   const handleConfirmBooking = () => {
     // Replace this with the actual API call for confirming the booking
-    alert("Booking Confirmed!");
-    navigate("/");
+    sessionStorage.removeItem("bookingData"); // Clear bookingData after confirmation
+    navigate("/manage-bookings");
   };
 
   return (
@@ -103,7 +106,7 @@ function FinaliseBookingPage() {
         <Button
           variant="outline-danger"
           size="lg"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(`/packages/${packageDetails._id}`)} // Go back to package details page
           className="px-5 ms-3"
         >
           Go Back
