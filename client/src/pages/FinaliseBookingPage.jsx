@@ -33,7 +33,7 @@ function FinaliseBookingPage() {
         package_id: packageDetails._id,
         date: formData.date,
         time: formData.time,
-        status: "NOT_COMPLETED"
+        status: "NOT_COMPLETED",
       };
 
       await axiosInstance.post("/booking", payload);
