@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -54,8 +55,8 @@ function Register() {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center bg-light byg-auth-container">
-      <div className="container w-25">
+    <div className="p-5 d-flex align-items-center justify-content-center bg-light">
+      <div className="card shadow-lg p-4" style={{ width: "40%" }}>
         <h2 className="text-center mb-4">Create An Account</h2>
         <div className="card-body">
           {error && <div className="alert alert-danger">{error}</div>}
