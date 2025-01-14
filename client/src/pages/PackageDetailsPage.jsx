@@ -71,7 +71,11 @@ function PackageDetailsPage() {
   };
 
   const handleBookingConfirmation = () => {
-    navigate("/finalize-booking", { state: { formData, packageDetails } });
+    sessionStorage.setItem(
+      "bookingData",
+      JSON.stringify({ formData, packageDetails })
+    );
+    navigate("/finalise-booking");
   };
 
   if (isLoading) {
@@ -90,9 +94,9 @@ function PackageDetailsPage() {
 
   return (
     <div className="container py-5">
-      <h1 className="text-center mb-4">{packageDetails.title}</h1>
+      <h1 className="text-left mb-4">{packageDetails.title}</h1>
       <div className="row">
-        <div className="col-md-8">
+        <div className="col-lg-6 col-md-8">
           <Carousel>
             {packageDetails.images.map((img, index) => (
               <Carousel.Item key={index}>
@@ -106,7 +110,7 @@ function PackageDetailsPage() {
             ))}
           </Carousel>
         </div>
-        <div className="col-md-4">
+        <div className="col-lg-6 col-md-4">
           <h3>Package Details</h3>
           <p>
             <strong>State:</strong> {packageDetails.state_name}
@@ -117,7 +121,7 @@ function PackageDetailsPage() {
           <p>{packageDetails.description}</p>
           <h4 className="text-success">Price: ₹{packageDetails.price}</h4>
           <Button variant="primary" className="mt-3" onClick={handleShowDrawer}>
-            Book Now
+            Check Availability
           </Button>
         </div>
       </div>
@@ -149,7 +153,7 @@ function PackageDetailsPage() {
         show={showDrawer}
         onHide={handleCloseDrawer}
         placement="end"
-        style={{ width: "650px" }}
+        style={{ width: "700px" }}
       >
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Book Your Package</Offcanvas.Title>
@@ -189,7 +193,6 @@ function PackageDetailsPage() {
               <thead>
                 <tr>
                   <th>Name</th>
-                  <th>Email</th>
                   <th>Phone</th>
                   <th>Experience (Years)</th>
                   <th>Bio</th>
@@ -201,7 +204,6 @@ function PackageDetailsPage() {
                 {guides.map((guide, index) => (
                   <tr key={index}>
                     <td>{guide.name}</td>
-                    <td>{guide.email}</td>
                     <td>{guide.phone}</td>
                     <td>{guide.experience}</td>
                     <td>{guide.bio}</td>
