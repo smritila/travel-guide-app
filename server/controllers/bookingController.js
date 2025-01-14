@@ -75,14 +75,15 @@ const updateBooking = async (req, res) => {
 const getMyBookings = async (req, res) => {
   try {
     const { userId, status } = req.query;
+    const finalUserId = req.user?.id || userId;
 
     // Validate required fields
-    if (!userId) {
+    if (!finalUserId) {
       return res.status(400).json({ message: "User ID is required." });
     }
 
     // Build the query object
-    let query = { tourist_id: userId };
+    let query = { tourist_id: finalUserId };
 
     // Add status filter if provided
     if (status) {

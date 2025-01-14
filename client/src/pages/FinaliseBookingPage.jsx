@@ -58,7 +58,7 @@ function FinaliseBookingPage() {
             variant="primary"
             size="lg"
             onClick={() => {
-              sessionStorage.removeItem("bookingData"); // Clear bookingData after confirmation
+              sessionStorage.removeItem("bookingData"); // Clear bookingData
               navigate("/manage-bookings");
             }}
             className="mt-3"
