@@ -8,7 +8,7 @@ const createNewBooking = async (req, res) => {
       package_id,
       date,
       time,
-      status
+      status = "NOT_COMPLETED"
     } = req.body;
 
     // Validate required fields
