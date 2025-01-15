@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import axiosInstance from "../axiosConfig";
 import "./Home.css";
 import Card from "react-bootstrap/Card";
+import Carousel from "react-bootstrap/Carousel";
+import goa from "../assets/images/goa.jpg";
+import Rajsthan1 from "../assets/images/Rajsthan1.jpg";
+import jaisalmeer from "../assets/images/jaisalmeer.jpeg";
 
 const Home = () => {
   const [packages, setPackages] = useState([]);
@@ -38,54 +42,75 @@ const Home = () => {
 
   return (
     <div className="home">
-      <section className="hero">
-        <div className="hero-content">
-          <h1>Explore the World with Book-Your-Guide</h1>
-          <p>Book your next adventure with ease and confidence.</p>
-          <button className="btn-secondary">Start Your Journey</button>
-        </div>
-      </section>
+      <Carousel>
+        <Carousel.Item>
+          <img
+            className="d-block w-100"
+            src={goa}
+            alt="First slide"
+            style={{ height: "100vh" }}
+          />
+          <Carousel.Caption>
+            <h1>Explore the World with Book-Your-Guide</h1>
+            <p>Book your next adventure with ease and confidence.</p>
+            <button className="btn btn-secondary">Start Your Journey</button>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img
+            className="d-block w-100"
+            src={Rajsthan1}
+            alt="Second slide"
+            style={{ height: "100vh" }}
+          />
+          <Carousel.Caption>
+            <h1>Discover Hidden Gems</h1>
+            <p>Find unique destinations for unforgettable experiences.</p>
+            <button className="btn btn-secondary">Explore Now</button>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img
+            className="d-block w-100"
+            src={jaisalmeer}
+            alt="Third slide"
+            style={{ height: "100vh" }}
+          />
+          <Carousel.Caption>
+            <h1>Plan Your Perfect Vacation</h1>
+            <p>Travel the world with our expertly curated packages.</p>
+            <button className="btn btn-secondary">Get Started</button>
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
 
       <section id="destinations" className="destinations">
         <h2>Featured Destinations</h2>
         <div className="destination-grid">
           {packages
             .filter((pkg) => pkg.image)
-            .map((pkg) => {
-              /* <div key={pkg._id} className="destination">
-                <img src={pkg.image} alt={pkg.place_name} />
-                <h3>
-                  {pkg.place_name}, {pkg.state_name}
-                </h3>
-                <p>{pkg.title}</p>
-                <p className="price">Starting from ₹{pkg.price}</p>
-              </div> */
-              return (
-                <Card key={pkg._id}>
-                  <Card.Img
-                    variant="top"
-                    src={pkg.image}
-                    alt={pkg.place_name}
-                    height={200}
-                  />
-                  <Card.Body>
-                    <Card.Title>
-                      {pkg.place_name}, {pkg.state_name}
-                    </Card.Title>
-                    <Card.Text>{pkg.title.slice(0, 50)}</Card.Text>
-                    <Card.Text className="price">
-                      Starting from ₹{pkg.price}
-                    </Card.Text>
-                    <Link
-                      to={`/packages/${pkg._id}`}
-                      className="btn btn-primary"
-                    >
-                      View Details
-                    </Link>
-                  </Card.Body>
-                </Card>
-              );
-            })}
+            .map((pkg) => (
+              <Card key={pkg._id}>
+                <Card.Img
+                  variant="top"
+                  src={pkg.image}
+                  alt={pkg.place_name}
+                  height={200}
+                />
+                <Card.Body>
+                  <Card.Title>
+                    {pkg.place_name}, {pkg.state_name}
+                  </Card.Title>
+                  <Card.Text>{pkg.title.slice(0, 50)}</Card.Text>
+                  <Card.Text className="price">
+                    Starting from ₹{pkg.price}
+                  </Card.Text>
+                  <Link to={`/packages/${pkg._id}`} className="btn btn-primary">
+                    View Details
+                  </Link>
+                </Card.Body>
+              </Card>
+            ))}
         </div>
       </section>
     </div>
