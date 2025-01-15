@@ -1,4 +1,5 @@
 const Booking = require("../models/BookingSchema");
+const { GuideReview } = require("../models/GuideSchema");
 
 const createNewBooking = async (req, res) => {
   try {
@@ -97,10 +98,25 @@ const getMyBookings = async (req, res) => {
     }
 
     // Find bookings for the given user with the optional status filter
-    const bookings = await Booking.find(query).populate("guide_id package_id");
+    const bookings = await Booking.find(query)
+      .populate("guide_id package_id")
+      .exec();
+
+    // Check if reviews exist for each booking
+    const bookingsWithReviewInfo = await Promise.all(
+      bookings.map(async (booking) => {
+        const reviewExists = await GuideReview.exists({
+          booking_id: booking._id
+        });
+        return {
+          ...booking.toObject(),
+          reviewSubmitted: !!reviewExists // Add reviewSubmitted field
+        };
+      })
+    );
 
     // Respond with the user's bookings
-    res.status(200).json(bookings);
+    res.status(200).json(bookingsWithReviewInfo);
   } catch (error) {
     console.error("Error fetching bookings:", error);
     res
