@@ -137,7 +137,7 @@ function Register() {
                 required
               >
                 <option value="">Select your role</option>
-                <option value="user">User</option>
+                <option value="tourist">Tourist</option>
                 <option value="guide">Guide</option>
               </select>
             </div>
