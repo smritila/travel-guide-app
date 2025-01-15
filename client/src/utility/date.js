@@ -17,12 +17,6 @@ export function getDateDifference(date1, date2, unit = "days") {
 
   // Convert the difference based on the requested unit
   switch (unit) {
-    case "seconds":
-      return Math.floor(differenceInMs / 1000);
-    case "minutes":
-      return Math.floor(differenceInMs / (1000 * 60));
-    case "hours":
-      return Math.floor(differenceInMs / (1000 * 60 * 60));
     case "days":
       return Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
     default:

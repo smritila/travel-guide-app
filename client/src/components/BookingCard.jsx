@@ -3,7 +3,7 @@ import { Card, Badge } from "react-bootstrap";
 
 import { getDateDifference, getFormattedDateAndTime } from "../utility/date";
 
-const BookingCard = (booking) => (
+const BookingCard = ({ booking }) => (
   <Card key={booking._id} className="mb-3">
     <Card.Body>
       <Card.Title>
