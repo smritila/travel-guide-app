@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axiosInstance from "../axiosConfig";
 import { Carousel, Button, Offcanvas, Form, Table } from "react-bootstrap";
+import { Rating } from "react-simple-star-rating";
+
+import axiosInstance from "../axiosConfig";
 
 function PackageDetailsPage() {
   const { id } = useParams();
@@ -13,7 +15,7 @@ function PackageDetailsPage() {
     date: "",
     time: "",
     persons: 1,
-    guide: null,
+    guide: null
   });
   const [guides, setGuides] = useState([]); // Guides list with names and reviews
 
@@ -66,7 +68,7 @@ function PackageDetailsPage() {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -193,10 +195,9 @@ function PackageDetailsPage() {
               <thead>
                 <tr>
                   <th>Name</th>
+                  <th>Rating</th>
                   <th>Phone</th>
-                  <th>Experience (Years)</th>
-                  <th>Bio</th>
-                  <th>Languages</th>
+                  <th>Experience</th>
                   <th>Select</th>
                 </tr>
               </thead>
@@ -204,10 +205,23 @@ function PackageDetailsPage() {
                 {guides.map((guide, index) => (
                   <tr key={index}>
                     <td>{guide.name}</td>
+                    <td>
+                      {
+                        <>
+                          <Rating
+                            initialValue={guide.averageRating}
+                            size={15}
+                            allowHalfIcon
+                            readonly
+                          />
+                          <small className="ms-2">
+                            ( {`${guide.reviewCount} ratings`} )
+                          </small>
+                        </>
+                      }
+                    </td>
                     <td>{guide.phone}</td>
                     <td>{guide.experience}</td>
-                    <td>{guide.bio}</td>
-                    <td>{guide.languages.join(", ")}</td>
                     <td>
                       <Form.Check
                         type="radio"
@@ -216,7 +230,7 @@ function PackageDetailsPage() {
                         onChange={(e) =>
                           setFormData((prevData) => ({
                             ...prevData,
-                            guide: guide,
+                            guide: guide
                           }))
                         }
                       />
