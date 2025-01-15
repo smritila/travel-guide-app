@@ -1,182 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import {
-//   Tabs,
-//   Tab,
-//   Button,
-//   Spinner,
-//   Alert,
-//   Modal,
-//   Form,
-//   Table,
-// } from "react-bootstrap";
-
-// import BookingCard from "../components/BookingCard";
-// import axiosInstance from "../axiosConfig";
-
-// function ManageBookingsPage() {
-//   const [loading, setLoading] = useState(false);
-//   const [upcomingBookings, setUpcomingBookings] = useState([]);
-//   const [completedBookings, setCompletedBookings] = useState([]);
-//   const [error, setError] = useState(null);
-//   const [showModal, setShowModal] = useState(true);
-//   const [selectedBooking, setSelectedBooking] = useState(null);
-//   const [reviewData, setReviewData] = useState({
-//     guideRating: "",
-//     review: "",
-//     //date: "",
-//   });
-
-//   const handleCloseModal = () => {
-//     setShowModal(false);
-//     setReviewData({ guideRating: "", review: "" });
-//   };
-
-//   const handleOpenModal = (booking) => {
-//     setSelectedBooking(booking);
-//     setShowModal(true);
-//   };
-
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setReviewData((prevData) => ({ ...prevData, [name]: value }));
-//   };
-
-//   const handleSubmitReview = () => {
-//     console.log("Submitting Review:", {
-//       booking: selectedBooking,
-//       ...reviewData,
-//     });
-//     // Logic to handle form submission (e.g., API call) can be added here
-
-//     handleCloseModal();
-//   };
-
-//   useEffect(() => {
-//     const fetchBookings = async (status = "NOT_COMPLETED") => {
-//       try {
-//         const bookings = await axiosInstance.get("/booking", {
-//           params: { status },
-//         });
-//         if (status === "NOT_COMPLETED") {
-//           setUpcomingBookings(bookings);
-//         } else {
-//           setCompletedBookings(bookings);
-//         }
-//       } catch (err) {
-//         setError("Failed to load bookings. Please try again later.");
-//       }
-//     };
-
-//     setLoading(true);
-//     Promise.all([
-//       fetchBookings("NOT_COMPLETED"),
-//       fetchBookings("COMPLETED"),
-//     ]).then(() => {
-//       setLoading(false);
-//     });
-//   }, []);
-
-//   return (
-//     <div className="container py-5">
-//       <h1 className="text-center mb-4">Manage Bookings</h1>
-
-//       {loading && (
-//         <div className="text-center">
-//           <Spinner animation="border" role="status">
-//             <span className="visually-hidden">Loading...</span>
-//           </Spinner>
-//         </div>
-//       )}
-
-//       {error && (
-//         <Alert variant="danger" className="text-center">
-//           {error}
-//         </Alert>
-//       )}
-
-//       {!loading && !error && (
-//         <Tabs defaultActiveKey="upcoming" id="bookings-tabs" className="mb-3">
-//           <Tab eventKey="upcoming" title="Upcoming Bookings">
-//             {upcomingBookings.length > 0 ? (
-//               upcomingBookings.map((booking) => (
-//                 <BookingCard
-//                   key={booking.id}
-//                   booking={booking}
-//                   onComplete={() => handleOpenModal(booking)}
-//                 />
-//               ))
-//             ) : (
-//               <Alert variant="info" className="text-center">
-//                 No upcoming bookings found.
-//               </Alert>
-//             )}
-//           </Tab>
-//           <Tab eventKey="completed" title="Completed Bookings">
-//             {completedBookings.length > 0 ? (
-//               completedBookings.map((booking) => (
-//                 <BookingCard key={booking.id} booking={booking} />
-//               ))
-//             ) : (
-//               <Alert variant="info" className="text-center">
-//                 No completed bookings found.
-//               </Alert>
-//             )}
-//           </Tab>
-//         </Tabs>
-//       )}
-
-//       <Modal show={showModal} onHide={handleCloseModal} centered>
-//         <Modal.Header closeButton>
-//           <Modal.Title>Complete Booking</Modal.Title>
-//         </Modal.Header>
-//         <Modal.Body>
-//           <Form>
-//             <Table striped bordered hover>
-//               <tbody>
-//                 <tr>
-//                   <td>Guide Rating</td>
-//                   <td>
-//                     <Form.Control
-//                       type="number"
-//                       name="guideRating"
-//                       min="1"
-//                       max="5"
-//                       value={reviewData.guideRating}
-//                       onChange={handleInputChange}
-//                     />
-//                   </td>
-//                 </tr>
-//                 <tr>
-//                   <td>Review</td>
-//                   <td>
-//                     <Form.Control
-//                       as="textarea"
-//                       rows={3}
-//                       name="review"
-//                       value={reviewData.review}
-//                       onChange={handleInputChange}
-//                     />
-//                   </td>
-//                 </tr>
-//               </tbody>
-//             </Table>
-//           </Form>
-//         </Modal.Body>
-//         <Modal.Footer>
-//           <Button variant="secondary" onClick={handleCloseModal}>
-//             Cancel
-//           </Button>
-//           <Button variant="primary" onClick={handleSubmitReview}>
-//             Submit
-//           </Button>
-//         </Modal.Footer>
-//       </Modal>
-//     </div>
-//   );
-// }
-
-// export default ManageBookingsPage;
-
 import React, { useState, useEffect } from "react";
 import {
   Tabs,
@@ -187,6 +8,7 @@ import {
   Modal,
   Form,
   Table,
+  Toast
 } from "react-bootstrap";
 import { Rating } from "react-simple-star-rating";
 
@@ -194,18 +16,24 @@ import BookingCard from "../components/BookingCard";
 import axiosInstance from "../axiosConfig";
 
 function ManageBookingsPage() {
+  const [showToast, setShowToast] = useState(false);
+  const [fetching, setFetching] = useState(false);
   const [loading, setLoading] = useState(false);
   const [upcomingBookings, setUpcomingBookings] = useState([]);
   const [completedBookings, setCompletedBookings] = useState([]);
   const [error, setError] = useState(null);
-  const [showModal, setShowModal] = useState(true);
+  const [success, setSuccess] = useState("");
+  const [showModal, setShowModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [showWarningModal, setShowWarningModal] = useState(false);
   const [reviewData, setReviewData] = useState({
     guideRating: 0,
-    review: "",
+    review: ""
   });
+  const [activeTab, setActiveTab] = useState("upcoming");
 
   const handleCloseModal = () => {
+    setSelectedBooking(null);
     setShowModal(false);
     setReviewData({ guideRating: 0, review: "" });
   };
@@ -224,38 +52,91 @@ function ManageBookingsPage() {
     setReviewData((prevData) => ({ ...prevData, guideRating: rating }));
   };
 
-  const handleSubmitReview = () => {
+  const handleSubmitReview = async () => {
+    try {
+      setLoading(true);
+      const payload = {
+        booking_id: selectedBooking._id,
+        guide_id: selectedBooking.guide_id._id,
+        rating: reviewData.guideRating,
+        review: reviewData.review,
+        date: new Date().toISOString()
+      };
+
+      const res = await axiosInstance.post("/guides/review", payload);
+      if (res.success) {
+        setSuccess("Review submitted successfully!");
+        setShowToast(true);
+      }
+    } catch (err) {
+      console.error("Failed to submit review:", err.message);
+      setError("Failed to submit review. Please try again later.");
+    } finally {
+      setLoading(false);
+      handleCloseModal();
+    }
     console.log("Submitting Review:", {
       booking: selectedBooking,
-      ...reviewData,
+      ...reviewData
     });
     // Logic to handle form submission (e.g., API call) can be added here
+  };
 
-    handleCloseModal();
+  const handleEndTour = (booking) => {
+    setSelectedBooking(booking);
+    setShowWarningModal(true);
+  };
+
+  const handleCloseWarningModal = () => {
+    setShowWarningModal(false);
+  };
+
+  const fetchBookings = async (status = "NOT_COMPLETED") => {
+    try {
+      const bookings = await axiosInstance.get("/booking", {
+        params: { status }
+      });
+      if (status === "NOT_COMPLETED") {
+        setUpcomingBookings(bookings);
+      } else {
+        setCompletedBookings(bookings);
+      }
+    } catch (err) {
+      setError("Failed to load bookings. Please try again later.");
+    }
+  };
+
+  const handleConfirmEndTour = async () => {
+    try {
+      setLoading(true);
+      const API_URL = `/booking/${selectedBooking._id}`;
+      const response = await axiosInstance.put(API_URL, {
+        status: "COMPLETED"
+      });
+      if (response.data.status === "COMPLETED") {
+        setSuccess("Booking has been completed successfully!");
+        setShowToast(true);
+        await Promise.all[
+          (fetchBookings("NOT_COMPLETED"), fetchBookings("COMPLETED"))
+        ];
+        setActiveTab("completed");
+      }
+    } catch (err) {
+      console.error("Failed to end tour:", err.message);
+      setError("Failed to end tour. Please try again later.");
+    } finally {
+      setShowWarningModal(false);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    const fetchBookings = async (status = "NOT_COMPLETED") => {
-      try {
-        const bookings = await axiosInstance.get("/booking", {
-          params: { status },
-        });
-        if (status === "NOT_COMPLETED") {
-          setUpcomingBookings(bookings);
-        } else {
-          setCompletedBookings(bookings);
-        }
-      } catch (err) {
-        setError("Failed to load bookings. Please try again later.");
-      }
-    };
-
-    setLoading(true);
+    setFetching(true);
     Promise.all([
       fetchBookings("NOT_COMPLETED"),
-      fetchBookings("COMPLETED"),
+      fetchBookings("COMPLETED")
     ]).then(() => {
-      setLoading(false);
+      setFetching(false);
     });
   }, []);
 
@@ -263,10 +144,10 @@ function ManageBookingsPage() {
     <div className="container py-5">
       <h1 className="text-center mb-4">Manage Bookings</h1>
 
-      {loading && (
+      {fetching && (
         <div className="text-center">
           <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
+            <span className="visually-hidden">fetching...</span>
           </Spinner>
         </div>
       )}
@@ -277,15 +158,20 @@ function ManageBookingsPage() {
         </Alert>
       )}
 
-      {!loading && !error && (
-        <Tabs defaultActiveKey="upcoming" id="bookings-tabs" className="mb-3">
+      {!fetching && !error && (
+        <Tabs
+          activeKey={activeTab}
+          id="bookings-tabs"
+          className="mb-3"
+          onSelect={(k) => setActiveTab(k)}
+        >
           <Tab eventKey="upcoming" title="Upcoming Bookings">
             {upcomingBookings.length > 0 ? (
               upcomingBookings.map((booking) => (
                 <BookingCard
-                  key={booking.id}
+                  key={booking._id}
                   booking={booking}
-                  onComplete={() => handleOpenModal(booking)}
+                  onEndTour={() => handleEndTour(booking)}
                 />
               ))
             ) : (
@@ -297,7 +183,12 @@ function ManageBookingsPage() {
           <Tab eventKey="completed" title="Completed Bookings">
             {completedBookings.length > 0 ? (
               completedBookings.map((booking) => (
-                <BookingCard key={booking.id} booking={booking} />
+                <BookingCard
+                  key={booking._id}
+                  booking={booking}
+                  onGiveRating={() => handleOpenModal(booking)}
+                  reviewSubmitted={booking.reviewSubmitted}
+                />
               ))
             ) : (
               <Alert variant="info" className="text-center">
@@ -310,7 +201,7 @@ function ManageBookingsPage() {
 
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Complete Booking</Modal.Title>
+          <Modal.Title>Rate your Guide</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -325,7 +216,6 @@ function ManageBookingsPage() {
                       size={20}
                       transition
                       allowHalfIcon
-                      showTooltip
                     />
                   </td>
                 </tr>
@@ -354,6 +244,61 @@ function ManageBookingsPage() {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <Modal show={showWarningModal} onHide={handleCloseWarningModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>End Tour</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to end the tour for this booking?
+          <br />
+          <strong>Booking Id</strong> - {selectedBooking?._id}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            disabled={loading}
+            onClick={handleCloseWarningModal}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            disabled={loading}
+            onClick={handleConfirmEndTour}
+          >
+            {loading && (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                className="me-2"
+              />
+            )}
+            <span>End Tour</span>
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Toast
+        onClose={() => setShowToast(false)}
+        show={showToast}
+        delay={3000}
+        autohide
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          zIndex: 1050
+        }}
+      >
+        <Toast.Header>
+          <strong className="me-auto">Success</strong>
+        </Toast.Header>
+        <Toast.Body>{success}</Toast.Body>
+      </Toast>
     </div>
   );
 }

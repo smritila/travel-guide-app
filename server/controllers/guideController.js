@@ -3,7 +3,7 @@ const { Guide, GuideReview } = require("../models/GuideSchema");
 
 const getAllGuides = async (req, res) => {
   try {
-    // Query the Guides collection and populate the related User data
+    // Fetch all guides and populate user data
     const guides = await Guide.find()
       .populate({
         path: "user_id",
@@ -11,16 +11,48 @@ const getAllGuides = async (req, res) => {
       })
       .exec();
 
-    // Prepare the final list with combined data
-    const guideList = guides.map((guide) => ({
-      id: guide._id,
-      name: guide.user_id?.name || "Unknown",
-      email: guide.user_id?.email || "Unknown",
-      bio: guide.bio,
-      experience: guide.experience,
-      languages: guide.languages,
-      phone: guide.contact.phone
-    }));
+    // Get all guide IDs
+    const guideIds = guides.map((guide) => guide._id);
+
+    // Aggregate average rating and review count for each guide
+    const reviews = await GuideReview.aggregate([
+      { $match: { guide_id: { $in: guideIds } } },
+      {
+        $group: {
+          _id: "$guide_id",
+          averageRating: { $avg: "$rating" },
+          reviewCount: { $sum: 1 }
+        }
+      }
+    ]);
+
+    // Create a map for quick lookup of reviews data
+    const reviewsMap = reviews.reduce((map, review) => {
+      map[review._id.toString()] = {
+        averageRating: review.averageRating,
+        reviewCount: review.reviewCount
+      };
+      return map;
+    }, {});
+
+    // Prepare the final guide list with combined data
+    const guideList = guides.map((guide) => {
+      const reviewData = reviewsMap[guide._id.toString()] || {
+        averageRating: 0,
+        reviewCount: 0
+      };
+      return {
+        id: guide._id,
+        name: guide.user_id?.name || "Unknown",
+        email: guide.user_id?.email || "Unknown",
+        bio: guide.bio,
+        experience: guide.experience,
+        languages: guide.languages,
+        phone: guide.contact.phone,
+        averageRating: reviewData.averageRating,
+        reviewCount: reviewData.reviewCount
+      };
+    });
 
     res.json({ success: true, data: guideList });
   } catch (error) {
@@ -74,53 +106,6 @@ const createReview = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-
-/*
-const updateReview = async (req, res) => {
-  try {
-    const { reviewId } = req.params;
-    const { rating, review } = req.body;
-
-    // Update the review with the given ID
-    const updatedReview = await GuideReview.findByIdAndUpdate(
-      reviewId,
-      { rating, review },
-      { new: true } // Return the updated document
-    );
-
-    if (!updatedReview) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Review not found" });
-    }
-
-    res.json({ success: true, data: updatedReview });
-  } catch (error) {
-    console.error("Error updating review:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
-  }
-};
-
-const deleteReview = async (req, res) => {
-  try {
-    const { reviewId } = req.params;
-
-    // Delete the review with the given ID
-    const deletedReview = await GuideReview.findByIdAndDelete(reviewId);
-
-    if (!deletedReview) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Review not found" });
-    }
-
-    res.json({ success: true, message: "Review deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting review:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
-  }
-};
-*/
 
 module.exports = {
   getAllGuides,
