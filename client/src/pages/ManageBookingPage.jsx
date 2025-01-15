@@ -204,6 +204,21 @@ function ManageBookingsPage() {
           <Modal.Title>Rate your Guide</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <div>
+            <h5>Guide Information</h5>
+            <Table striped bordered hover>
+              <tbody>
+                <tr>
+                  <td>Name</td>
+                  <td>{selectedBooking?.guide_id?.user_id?.name || "N/A"}</td>
+                </tr>
+                <tr>
+                  <td>Contact Number</td>
+                  <td>{selectedBooking?.guide_id?.contact?.phone || "N/A"}</td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
           <Form>
             <Table striped bordered hover>
               <tbody>
