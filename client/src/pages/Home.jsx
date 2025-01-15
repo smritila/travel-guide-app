@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axiosInstance from "../axiosConfig";
+import { Container, Card, Carousel } from "react-bootstrap";
+
 import "./Home.css";
-import Card from "react-bootstrap/Card";
-import Carousel from "react-bootstrap/Carousel";
+
 import goa from "../assets/images/goa.jpg";
-import Rajsthan1 from "../assets/images/Rajsthan1.jpg";
-import jaisalmeer from "../assets/images/jaisalmeer.jpeg";
+import Rajsthan1 from "../assets/images/Rajasthan.jpg";
+import kerala from "../assets/images/Kerala.jpg";
+
+import axiosInstance from "../axiosConfig";
 
 const Home = () => {
   const [packages, setPackages] = useState([]);
@@ -41,14 +43,14 @@ const Home = () => {
   }
 
   return (
-    <div className="home">
+    <Container>
       <Carousel>
         <Carousel.Item>
           <img
             className="d-block w-100"
             src={goa}
             alt="First slide"
-            style={{ height: "100vh" }}
+            height={500}
           />
           <Carousel.Caption>
             <h1>Explore the World with Book-Your-Guide</h1>
@@ -61,7 +63,7 @@ const Home = () => {
             className="d-block w-100"
             src={Rajsthan1}
             alt="Second slide"
-            style={{ height: "100vh" }}
+            height={500}
           />
           <Carousel.Caption>
             <h1>Discover Hidden Gems</h1>
@@ -72,9 +74,9 @@ const Home = () => {
         <Carousel.Item>
           <img
             className="d-block w-100"
-            src={jaisalmeer}
+            src={kerala}
             alt="Third slide"
-            style={{ height: "100vh" }}
+            height={500}
           />
           <Carousel.Caption>
             <h1>Plan Your Perfect Vacation</h1>
@@ -113,7 +115,7 @@ const Home = () => {
             ))}
         </div>
       </section>
-    </div>
+    </Container>
   );
 };
 
