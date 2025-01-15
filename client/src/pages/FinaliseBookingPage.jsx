@@ -33,7 +33,7 @@ function FinaliseBookingPage() {
         package_id: packageDetails._id,
         date: formData.date,
         time: formData.time,
-        status: "NOT_COMPLETED"
+        status: "NOT_COMPLETED",
       };
 
       await axiosInstance.post("/booking", payload);
@@ -58,7 +58,7 @@ function FinaliseBookingPage() {
             variant="primary"
             size="lg"
             onClick={() => {
-              sessionStorage.removeItem("bookingData"); // Clear bookingData after confirmation
+              sessionStorage.removeItem("bookingData"); // Clear bookingData
               navigate("/manage-bookings");
             }}
             className="mt-3"
