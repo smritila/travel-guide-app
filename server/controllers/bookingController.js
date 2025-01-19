@@ -1,8 +1,16 @@
 const Booking = require("../models/BookingSchema");
+const { GuideReview } = require("../models/GuideSchema");
 
 const createNewBooking = async (req, res) => {
   try {
-    const { guide_id, tourist_id, package_id, date, time, status } = req.body;
+    const {
+      guide_id,
+      tourist_id = req.user?.id,
+      package_id,
+      date,
+      time,
+      status = "NOT_COMPLETED"
+    } = req.body;
 
     // Validate required fields
     if (!guide_id || !tourist_id || !package_id || !date || !time || !status) {
@@ -16,7 +24,7 @@ const createNewBooking = async (req, res) => {
       package_id,
       date,
       time,
-      status,
+      status
     });
 
     // Save the booking to the database
@@ -46,7 +54,7 @@ const updateBooking = async (req, res) => {
     // Find the booking and update it
     const updatedBooking = await Booking.findByIdAndUpdate(bookingId, updates, {
       new: true,
-      runValidators: true,
+      runValidators: true
     });
 
     // Check if the booking exists
@@ -68,14 +76,15 @@ const updateBooking = async (req, res) => {
 const getMyBookings = async (req, res) => {
   try {
     const { userId, status } = req.query;
+    const finalUserId = req.user?.id || userId;
 
     // Validate required fields
-    if (!userId) {
+    if (!finalUserId) {
       return res.status(400).json({ message: "User ID is required." });
     }
 
     // Build the query object
-    let query = { tourist_id: userId };
+    let query = { tourist_id: finalUserId };
 
     // Add status filter if provided
     if (status) {
@@ -89,10 +98,33 @@ const getMyBookings = async (req, res) => {
     }
 
     // Find bookings for the given user with the optional status filter
-    const bookings = await Booking.find(query).populate("guide_id package_id");
+    const bookings = await Booking.find(query)
+      .populate({
+        path: "guide_id",
+        populate: {
+          path: "user_id", // Populate the user data for the guide
+          select: "name" // Only include the guide's name
+        }
+      })
+      .populate("package_id")
+      .exec();
+
+    // Check if reviews exist for each booking and add guide name
+    const bookingsWithDetails = await Promise.all(
+      bookings.map(async (booking) => {
+        const reviewExists = await GuideReview.exists({
+          booking_id: booking._id
+        });
+
+        return {
+          ...booking.toObject(),
+          reviewSubmitted: !!reviewExists // Add reviewSubmitted field
+        };
+      })
+    );
 
     // Respond with the user's bookings
-    res.status(200).json(bookings);
+    res.status(200).json(bookingsWithDetails);
   } catch (error) {
     console.error("Error fetching bookings:", error);
     res

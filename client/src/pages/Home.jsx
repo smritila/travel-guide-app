@@ -1,64 +1,121 @@
-import React from 'react';
-import './Home.css'; // Include your custom CSS file for styling
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Container, Card, Carousel } from "react-bootstrap";
+
+import "./Home.css";
+
+import goa from "../assets/images/goa.jpg";
+import Rajsthan1 from "../assets/images/Rajasthan.jpg";
+import kerala from "../assets/images/Kerala.jpg";
+
+import axiosInstance from "../axiosConfig";
 
 const Home = () => {
+  const [packages, setPackages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const data = await axiosInstance.get("/packages");
+        if (data && Array.isArray(data)) {
+          setPackages(data);
+        } else {
+          throw new Error("Invalid data format received from API");
+        }
+      } catch (err) {
+        setError(err.message || "Failed to fetch travel packages");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPackages();
+  }, []);
+
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error">Error: {error}</div>;
+  }
+
   return (
-    <div className="home">
-      {/* Navigation Bar */}
-      <nav className="navbar">
-        <div className="logo">Book-Your-Guide</div>
-        <ul className="nav-links">
-          <li><a href="#">Home</a></li>
-          <li><a href="#destinations">Destinations</a></li>
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-        <button className="btn-primary">Sign In</button>
-      </nav>
+    <Container>
+      <Carousel>
+        <Carousel.Item>
+          <img
+            className="d-block w-100"
+            src={goa}
+            alt="First slide"
+            height={500}
+          />
+          <Carousel.Caption>
+            <h1>Explore the World with Book-Your-Guide</h1>
+            <p>Book your next adventure with ease and confidence.</p>
+            <button className="btn btn-secondary">Start Your Journey</button>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img
+            className="d-block w-100"
+            src={Rajsthan1}
+            alt="Second slide"
+            height={500}
+          />
+          <Carousel.Caption>
+            <h1>Discover Hidden Gems</h1>
+            <p>Find unique destinations for unforgettable experiences.</p>
+            <button className="btn btn-secondary">Explore Now</button>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img
+            className="d-block w-100"
+            src={kerala}
+            alt="Third slide"
+            height={500}
+          />
+          <Carousel.Caption>
+            <h1>Plan Your Perfect Vacation</h1>
+            <p>Travel the world with our expertly curated packages.</p>
+            <button className="btn btn-secondary">Get Started</button>
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
 
-      {/* Hero Section */}
-      <section className="hero">
-        <div className="hero-content">
-          <h1>Explore the World with Book-Your-Guide</h1>
-          <p>Book your next adventure with ease and confidence.</p>
-          <button className="btn-secondary">Start Your Journey</button>
-          {/* <img src="/images/Explore.jpg" alt="Beautiful Landscape" className="hero" /> */}
-        </div>
-      </section>
-
-      {/* Featured Destinations */}
       <section id="destinations" className="destinations">
         <h2>Featured Destinations</h2>
         <div className="destination-grid">
-          <div className="row">
-            <div className="destination">
-              <img src="/images/karnataka.jpg" alt="Karnataka" />
-              <h3>Karnataka</h3>
-              <p>Uncover the charm of Karnataka – where heritage meets innovation!</p>
-            </div>
-            <div className="destination">
-              <img src="/images/rajasthan.jpg" alt="Rajasthan" />
-              <h3>Rajasthan</h3>
-              <p>Step into Rajasthan – the land of royal palaces and timeless deserts!</p>
-            </div>
-          </div>
-          <div className="row">
-            <div className="destination">
-              <img src="/images/kerala.jpg" alt="Kerala" />
-              <h3>Kerala</h3>
-              <p>Sail through Kerala – God’s Own Country, adorned with serene backwaters!</p>
-            </div>
-            <div className="destination">
-              <img src="/images/goa.jpg" alt="Goa" />
-              <h3>Goa</h3>
-              <p>Experience the magic of Goa – golden beaches and vibrant nightlife await!</p>
-            </div>
-          </div>
+          {packages
+            .filter((pkg) => pkg.image)
+            .map((pkg) => (
+              <Card key={pkg._id}>
+                <Card.Img
+                  variant="top"
+                  src={pkg.image}
+                  alt={pkg.place_name}
+                  height={200}
+                />
+                <Card.Body>
+                  <Card.Title>
+                    {pkg.place_name}, {pkg.state_name}
+                  </Card.Title>
+                  <Card.Text>{pkg.title.slice(0, 50)}</Card.Text>
+                  <Card.Text className="price">
+                    Starting from ₹{pkg.price}
+                  </Card.Text>
+                  <Link to={`/packages/${pkg._id}`} className="btn btn-primary">
+                    View Details
+                  </Link>
+                </Card.Body>
+              </Card>
+            ))}
         </div>
       </section>
-
-     
-    </div>
+    </Container>
   );
 };
 
