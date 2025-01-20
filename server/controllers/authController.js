@@ -28,7 +28,7 @@ const loginUser = async (req, res) => {
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1d"
+        expiresIn: "1d",
       }
     );
     res.status(200).json({ token });
@@ -51,7 +51,7 @@ const validateToken = (req, res) => {
     // Respond with the user details from the token
     res.status(200).json({
       message: "Token is valid.",
-      user // Contains decoded JWT payload
+      user, // Contains decoded JWT payload
     });
   } catch (error) {
     console.error("Error validating token:", error);
