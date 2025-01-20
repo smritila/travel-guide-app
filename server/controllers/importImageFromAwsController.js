@@ -4,12 +4,6 @@ const {
   PackageWithImages
 } = require("../models/PackageDetailsSchema");
 
-/**
- * Add below environment variables in .env file
- * AWS_ACCESS_KEY_ID = AKIA4HWJTXBZTDMBDCEH
- * AWS_SECRET_ACCESS_KEY = G2AADjZM7LNvvpC0FBEiyTo7OV8maJW/+uhJT+Sz
- */
-
 // Configure AWS
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID, // Replace with your Access Key ID
