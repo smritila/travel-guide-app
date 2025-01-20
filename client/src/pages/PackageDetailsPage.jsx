@@ -15,7 +15,7 @@ function PackageDetailsPage() {
     date: "",
     time: "",
     persons: 1,
-    guide: null
+    guide: null,
   });
   const [guides, setGuides] = useState([]); // Guides list with names and reviews
 
@@ -68,7 +68,7 @@ function PackageDetailsPage() {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -230,7 +230,7 @@ function PackageDetailsPage() {
                         onChange={(e) =>
                           setFormData((prevData) => ({
                             ...prevData,
-                            guide: guide
+                            guide: guide,
                           }))
                         }
                       />
